@@ -49,6 +49,57 @@ Nos modèles ont été rigoureusement sélectionnés et pré-entraînés sur des
 
 ---
 
+## 📂 Architecture de l'Arborescence du Projet (Tree)
+
+Pour garantir la meilleure organisation possible et séparer le code serveur des données d'Intelligence Artificielle, le projet est structuré comme suit :
+
+```text
+AI/
+├── .gitignore                    # Fichiers lourds ignorés par Git (vidéos, modèles pth)
+├── README.md                     # Ce document de présentation
+├── LICENSE                       # Licence MIT
+├── crowdinit.py                  # ⭐ Application standard (Densité, Heatmap, Comptage)
+├── crowdinnov.py                 # ⭐⭐ Application avancée (Biométrie, FaceID, Analyse d'Émotions)
+├── requirements.txt              # Toutes les dépendances Python à installer
+├── categories_places365.txt      # (Requis) Les 365 catégories de lieux pour ResNet18
+├── data/                         # Dossier généré pour le stockage temporaire du serveur Flask
+│   ├── current_image.jpg         
+│   └── current_video.mp4         
+└── models/                       # 🧠 LE CERVEAU DU PROJET (Modèles d'entraînement)
+    ├── csrnet_training_system.py # Script d'entraînement pour le modèle CSRNet (ShanghaiTech)
+    ├── unet_train.py             # Script d'entraînement pour U-Net
+    ├── csrnet_best.pth           # Poids finaux du modèle CSRNet (à télécharger sur Hugging Face)
+    ├── unet_best.pth             # Poids finaux du modèle U-Net (à télécharger sur Hugging Face)
+    └── people_segmentation/      # Dataset d'Entraînement de segmentation (Images + Masques)
+```
+
+*(Note : Les gros modèles comme `yolov8n.pt`, `yolov8n-seg.pt` et `resnet18_places365.pth` seront téléchargés automatiquement à la racine s'ils ne sont pas trouvés).*
+
+---
+
+## 🧠 Cycle de Vie des Modèles : Entraînement & Téléchargement
+
+Cette section s'adresse aux développeurs IA souhaitant affiner les modèles neuronaux fournis.
+
+### Entraîner les Modèles depuis le Code Source
+
+1. **Entraînement CSRNet (Comptage de Foule Dense)**
+   Le script de formation se trouve dans `models/csrnet_training_system.py`. Ce script a été architecturé pour être lancé sur le dataset officiel **ShanghaiTech Part A**, qui contient des images de foules extrêmement denses (stades, manifestations).
+   *Le modèle final généré sera sauvegardé sous le nom de `models/csrnet_best.pth`.*
+
+2. **Entraînement U-Net (Segmentation)**
+   Le code source d'apprentissage se situe dans `models/unet_train.py`. Il s'entraîne directement sur le dossier interne `models/people_segmentation/` inclus dans ce dépôt GitHub, qui contient les dossiers d'Images et de Masques au pixel près.
+   *Le modèle final généré par les epochs sera le fameux `models/unet_best.pth`.*
+
+### Téléchargement du Détecteur de Lieux (ResNet18 Places365)
+
+SADU PRO utilise une version modifiée du ResNet18 entraînée sur le jeu de données du MIT "Places365" afin de discriminer instantanément le contexte d'une rue, d'une plage ou d'un parc intérieur.
+
+- **Le fichier de nomenclature `categories_places365.txt`** : C'est le dictionnaire de traduction. Il fournit à l'Intelligence Artificielle les étiquettes lisibles (ex: `indoor/mall`) pour chacune des 365 catégories détectables. (Il est normalement déjà inclus à la racine de ce dossier).
+- **Le modèle de poids `resnet18_places365.pth`** : Pour faire tourner ce réseau, les poids originaux du MIT sont nécessaires. Si vous ne l'avez pas, vous pouvez le télécharger depuis le dépôt officiel vision du MIT (Places365) ou l'extraire des poids Hugging Face de SADU PRO.
+
+---
+
 ## 🚀 Guide de Démarrage (Déploiement Local)
 
 **1. Installation des dépendances complètes**
