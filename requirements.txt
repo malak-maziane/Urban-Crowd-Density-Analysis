@@ -1,0 +1,12 @@
+torch
+torchvision
+opencv-python
+ultralytics
+flask
+face_recognition
+scipy
+matplotlib
+Pillow
+huggingface_hub
+gitpython
+numpy
